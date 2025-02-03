@@ -55,10 +55,10 @@ Summary Statistics:
 
 ## **Directory Structure**
 ```bash
-tesla-stock-price-monte-carlo/
+MonteCarloSimStockPred/
 │
 ├── data/                         # Contains raw and processed data
-│   ├── tesla_stock_data.csv      # Raw data of Tesla stock (from Yahoo Finance)
+│   ├── TSLA_stock_data.csv      # Raw data of Tesla stock (from Yahoo Finance)
 │
 ├── scripts/                      # Python scripts for running the simulation
 │   ├── Monte_Carlo_Simulation_stock_prediction.py # Script for performing the Monte Carlo simulation and plotting results
