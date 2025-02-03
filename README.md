@@ -28,7 +28,7 @@ pip install -r requirements.txt
 1. Clone the Repository:
 ```bash
 git clone https://github.com/Poulami-Nandi/MonteCarloSimStockPred.git
-cd tesla-stock-price-monte-carlo
+cd MonteCarloSimStockPred
 ```
 2. Download and Preprocess Data:
 In the script monte_carlo_simulation.py, the historical stock data for Tesla (TSLA) is downloaded using the yfinance library, and daily returns are calculated.
@@ -37,13 +37,13 @@ In the script monte_carlo_simulation.py, the historical stock data for Tesla (TS
 Once the data is prepared, run the simulation to predict Tesla's stock price for the next 5 days.
 
 ```bash
-python monte_carlo_simulation.py
+python Monte_Carlo_Simulation_stock_prediction.py
 ```
 4. Visualize the Results:
 The script will generate a plot of the Monte Carlo simulations, showing multiple simulated price paths for the next 5 days. The graph will also display the last known price (today’s closing price) and highlight the mean, 5th percentile, and 95th percentile predicted prices for the next 5 days.
 
 ```bash
-python monte_carlo_simulation.py
+python Monte_Carlo_Simulation_stock_prediction.py
 ```
 
 Example Output
