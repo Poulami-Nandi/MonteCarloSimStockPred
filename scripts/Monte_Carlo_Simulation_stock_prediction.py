@@ -78,7 +78,41 @@ class Monte_Carlo_Sim():
             lower_bound_98 = np.percentile(next_day_price, 1)
             upper_bound_98 = np.percentile(next_day_price, 99)
             # Print the results
-            print(f"The mean price {next_business_day.strftime('%Y-%m-%d')} is: {round(mean_price,2)}, The 95% CI price: ({round(lower_bound,2)}, {round(upper_bound,2)}), The 98% CI price: ({round(lower_bound_98,2)}, {round(upper_bound_98,2)})")
+            print(f"{self.ticker}: The mean price {next_business_day.strftime('%Y-%m-%d')} is: {round(mean_price,2)}, The 95% CI price: ({round(lower_bound,2)}, {round(upper_bound,2)}), The 98% CI price: ({round(lower_bound_98,2)}, {round(upper_bound_98,2)})")
+
+    def plot_CI_price(self):
+        # plot 90% CI, 95% CI, 98% CI and the mean price for each day
+        forecast_dates = pd.date_range(start=self.end_date, periods=self.nr_of_days + 1, freq='B')[1:]  
+
+        # Calculate mean and confidence intervals along the correct axis (axis=1 for row-wise)
+        mean_price = self.simulation_df.mean(axis=1)
+        
+        # Calculate confidence intervals for each day
+        ci_90 = np.array([np.percentile(self.simulation_df.iloc[i], [5, 95]) for i in range(self.nr_of_days)]) 
+        ci_95 = np.array([np.percentile(self.simulation_df.iloc[i], [2.5, 97.5]) for i in range(self.nr_of_days)])
+        ci_98 = np.array([np.percentile(self.simulation_df.iloc[i], [1, 99]) for i in range(self.nr_of_days)])
+
+        # Plot the results
+        plt.figure(figsize=(20, 10))
+        plt.plot(forecast_dates, mean_price, label='Mean Price', color='blue', linestyle='-', linewidth=2)
+
+        # Annotate values
+        for date, price in zip(forecast_dates, mean_price):
+            plt.text(date, price, f'{price:.2f}', ha='center', va='bottom') 
+
+        # Plot Confidence Intervals, using the transposed CI data
+        plt.fill_between(forecast_dates, ci_90[:, 0], ci_90[:, 1], color='blue', alpha=0.2, label='90% Confidence Interval')
+        plt.fill_between(forecast_dates, ci_95[:, 0], ci_95[:, 1], color='green', alpha=0.2, label='95% Confidence Interval')
+        plt.fill_between(forecast_dates, ci_98[:, 0], ci_98[:, 1], color='red',  alpha=0.2, label='98% Confidence Interval')
+
+        # Labels and title
+        plt.title(f"Monte Carlo Simulation: {self.ticker} Stock Price with Confidence Intervals 90, 95 and 98")
+        plt.xlabel('Date')
+        plt.ylabel('Predicted mean/CI ($)')
+        plt.xticks(rotation=90)  
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
 
 
     def simulation_plot(self):
@@ -105,7 +139,7 @@ class Monte_Carlo_Sim():
         plt.grid(True)
 
 
-#@title Execute Monte Carlo simulatiion using Monte_Carlo_Sim class
+# Execute Monte Carlo simulatiion using Monte_Carlo_Sim class
 # Define your list of tickers
 tickers = ["TSLA"]
 
@@ -130,5 +164,6 @@ for ticker in tickers:
     simulation = Monte_Carlo_Sim(ticker, start_date, end_date, 10, 5000)
     simulation.calculate_percentile_price_for_days()
     simulation.simulation_plot()
+    simulation.plot_CI_price()
     simulation.plot_stock_data_column('Close')
     simulation.plot_stock_data_column('Volume')
