@@ -22,10 +22,17 @@ class Monte_Carlo_Sim():
     
     def download_stock_data(self):
         self.data = pd.DataFrame()
-    
+
         # Using Yahoo Finance to download stock data
         stock = yf.Ticker(self.ticker)
         self.data = stock.history(start=self.start_date, end=self.end_date)
+        
+        # Check if the DataFrame is empty and print info if it is.
+        if self.data.empty:
+            print(f"Dataframe for ticker {self.ticker} is empty. Check data availability for the given date range.")
+            print(f"Start date: {self.start_date}, End date: {self.end_date}")
+            return  # Stop execution if data is empty
+
         self.data.to_csv(f"{self.ticker}_stock_data.csv")
 
 
@@ -39,6 +46,11 @@ class Monte_Carlo_Sim():
         self.daily_volatility = np.std(self.daily_returns)
     
     def execute_monte_carlo(self):
+        # Check if self.data is empty before accessing it.
+        if self.data.empty:
+            print(f"Dataframe for ticker {self.ticker} is empty. Monte Carlo simulation cannot be executed.")
+            return
+
         # Get the last days stock price
         last_price = self.data['Close'].iloc[-1]
         self.last_price = last_price
